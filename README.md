@@ -2,7 +2,7 @@
 
 ## Transaction filter indexes
 
-Migration `/home/runner/work/sep29/sep29/migrations/0001_add_transaction_filter_indexes.sql` adds:
+Migration `migrations/0001_add_transaction_filter_indexes.sql` adds:
 
 - `transactions (user_id, transaction_date DESC)` for user/date-range filtering
 - `transactions (user_id, category_id)` for user/category filtering
