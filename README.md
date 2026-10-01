@@ -9,6 +9,8 @@ Migration `migrations/0001_add_transaction_filter_indexes.sql` adds:
 
 `category_id` remains nullable to support uncategorized transactions; this migration only adds indexes and does not change column nullability.
 
+The `transactions` table and its indexed columns must exist before this migration runs. Because these statements use `CONCURRENTLY`, the migration runner must execute each statement outside a transaction block. If a previous concurrent build left an invalid index, drop that index with `DROP INDEX CONCURRENTLY` before retrying.
+
 If single-column indexes already exist on `user_id`, `transaction_date`, or `category_id`, review them after rollout because some may become redundant.
 
 Representative verification query:
@@ -32,3 +34,13 @@ Limit
         Index Cond: ((user_id = 42) AND (transaction_date >= '2026-01-01'::date) AND (transaction_date <= '2026-01-31'::date))
         Filter: ((category_id = 9) OR (category_id IS NULL))
 ```
+
+    ## Migration test
+
+    Run the PostgreSQL regression cases with:
+
+    ```sh
+    psql "$DATABASE_URL" -f tests/migrations/0001_add_transaction_filter_indexes.sql
+    ```
+
+    The test uses an isolated schema and verifies index definitions, concurrent-index readiness, rerun idempotency, and rollback cleanup.
