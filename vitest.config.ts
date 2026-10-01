@@ -4,8 +4,8 @@ export default defineConfig({
   test: {
     coverage: {
       provider: "v8",
-      include: ["lib/**/*.ts"],
-      exclude: ["lib/**/*.test.ts"],
+      include: ["lib/**/*.ts", "components/**/*.tsx"],
+      exclude: ["**/*.test.ts", "**/*.test.tsx"],
       thresholds: {
         lines: 95,
         statements: 95,

@@ -29,10 +29,19 @@ function advance(ms: number) {
 
 beforeEach(() => {
   vi.useFakeTimers();
+  // Testing Library's asyncWrapper ends every `await user.*` call with a
+  // `setTimeout(0)` that it only flushes when it detects Jest fake timers
+  // (`typeof jest !== "undefined"`). Under Vitest that timer is faked and
+  // never fires, hanging every interaction. Exposing a `jest` shim backed by
+  // Vitest's clock lets it flush the timer.
+  vi.stubGlobal("jest", {
+    advanceTimersByTime: (ms: number) => vi.advanceTimersByTime(ms),
+  });
 });
 
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
   vi.useRealTimers();
 });
 

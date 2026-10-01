@@ -9,9 +9,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
+    "jsx": "react-jsx",
     "declaration": true,
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["lib"]
+  "include": ["lib", "components"]
 }
