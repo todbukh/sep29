@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { useTransactionFilters } from "./useTransactionFilters.js";
 import type { TransactionFilters } from "../lib/filters/transactionFilters.js";
 
@@ -52,6 +52,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // This project doesn't set `test.globals: true`, so Testing Library's
+  // automatic afterEach-cleanup never registers itself - without this,
+  // prior tests' components stay mounted and their popstate listeners
+  // fire (against exhausted mocks) when later tests dispatch on window.
+  cleanup();
   vi.restoreAllMocks();
   setUrl("/transactions");
 });
